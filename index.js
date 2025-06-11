@@ -2,8 +2,6 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { Telegraf } from "telegraf";
 import { z } from "zod";
-import { TelegramCommandSchema } from "./types";
-import { BotCommand } from "telegraf/types";
 
 const TELEGRAM_BOT_API_TOKEN = process.env.TELEGRAM_BOT_API_TOKEN;
 
@@ -13,8 +11,8 @@ if (!TELEGRAM_BOT_API_TOKEN) {
 }
 
 const server = new McpServer({
-  name: "telegram_bot",
-  version: "1.0.0",
+  name: "telegram-bot",
+  version: "0.0.1",
   capabilities: {
     resources: {},
     tools: {},
@@ -29,7 +27,6 @@ server.tool(
   async () => {
     try {
       const response = await bot.telegram.getMe();
-
       return {
         content: [
           {
@@ -40,13 +37,9 @@ server.tool(
       };
     } catch (error) {
       console.error(error);
-
       return {
         content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
+          { type: "text", text: `Something went wrong` },
         ],
       };
     }
@@ -59,34 +52,20 @@ server.tool(
   {
     chatId: z
       .string()
-      .describe(
-        "Unique identifier for the target chat or username of the target channel"
-      ),
+      .describe("Unique identifier for the target chat or username of the target channel"),
     text: z.string().describe("Message the user want to send to chat id"),
   },
   async ({ chatId, text }) => {
     try {
       await bot.telegram.sendMessage(chatId, text);
-
       return {
         content: [
-          {
-            type: "text",
-            text: "Message sent to telegram user chat id",
-          },
+          { type: "text", text: "Message sent to telegram user chat id" },
         ],
       };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -95,15 +74,8 @@ server.tool(
   "send-photo",
   "Send photo with message using a chat id",
   {
-    chatId: z
-      .string()
-      .describe(
-        "Unique identifier for the target chat or username of the target channel"
-      ),
-    text: z
-      .string()
-      .describe("Caption for the photo that user want to send")
-      .optional(),
+    chatId: z.string().describe("Unique identifier for the target chat or username of the target channel"),
+    text: z.string().describe("Caption for the photo that user want to send").optional(),
     media: z
       .string()
       .describe(
@@ -113,26 +85,10 @@ server.tool(
   async ({ chatId, text, media }) => {
     try {
       await bot.telegram.sendPhoto(chatId, media, { caption: text });
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Message sent to telegram user chat id",
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: "Message sent to telegram user chat id" } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -141,36 +97,16 @@ server.tool(
   "kick-chat-member",
   "Kick a user from a group, a supergroup or a channel",
   {
-    chatId: z
-      .string()
-      .describe(
-        "Unique identifier for the target chat or username of the target channel"
-      ),
+    chatId: z.string().describe("Unique identifier for the target chat or username of the target channel"),
     userId: z.number().describe("Unique identifier of the target user"),
   },
   async ({ chatId, userId }) => {
     try {
       await bot.telegram.banChatMember(chatId, userId);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: "user banned from chat successfully",
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: "user banned from chat successfully" } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -179,38 +115,16 @@ server.tool(
   "un-ban-chat-member",
   "Use this method to unban a previously banned user in a supergroup or channel. The user will not return to the group or channel automatically",
   {
-    chatId: z
-      .string()
-      .describe(
-        "Unique identifier for the target chat or username of the target channel"
-      ),
+    chatId: z.string().describe("Unique identifier for the target chat or username of the target channel"),
     userId: z.number().describe("Unique identifier of the target user"),
   },
   async ({ chatId, userId }) => {
     try {
-      await bot.telegram.unbanChatMember(chatId, userId, {
-        only_if_banned: true,
-      });
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: "user unbanned from chat successfully",
-          },
-        ],
-      };
+      await bot.telegram.unbanChatMember(chatId, userId, { only_if_banned: true });
+      return { content: [ { type: "text", text: "user unbanned from chat successfully" } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -219,35 +133,15 @@ server.tool(
   "get-chat",
   "Use this method to get up-to-date information about the chat",
   {
-    chatId: z
-      .string()
-      .describe(
-        "Unique identifier for the target chat or username of the target channel"
-      ),
+    chatId: z.string().describe("Unique identifier for the target chat or username of the target channel"),
   },
   async ({ chatId }) => {
     try {
       const chatFullInfo = await bot.telegram.getChat(chatId);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(chatFullInfo),
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: JSON.stringify(chatFullInfo) } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -256,35 +150,15 @@ server.tool(
   "get-chat-member-count",
   "Use this method to get the number of members in a chat",
   {
-    chatId: z
-      .string()
-      .describe(
-        "Unique identifier for the target chat or username of the target channel"
-      ),
+    chatId: z.string().describe("Unique identifier for the target chat or username of the target channel"),
   },
   async ({ chatId }) => {
     try {
       const memberCount = await bot.telegram.getChatMembersCount(chatId);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(memberCount),
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: JSON.stringify(memberCount) } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -293,36 +167,16 @@ server.tool(
   "get-chat-member",
   "get information about a member of a chat",
   {
-    chatId: z
-      .string()
-      .describe(
-        "Unique identifier for the target chat or username of the target channel"
-      ),
+    chatId: z.string().describe("Unique identifier for the target chat or username of the target channel"),
     userId: z.number().describe("Unique identifier of the target user"),
   },
   async ({ chatId, userId }) => {
     try {
       const member = await bot.telegram.getChatMember(chatId, userId);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(member),
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: JSON.stringify(member) } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -340,26 +194,10 @@ server.tool(
   async ({ short_description }) => {
     try {
       await bot.telegram.setMyShortDescription(short_description);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Successfully update short description",
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: "Successfully update short description" } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -370,26 +208,10 @@ server.tool(
   async () => {
     try {
       const response = await bot.telegram.getMyShortDescription();
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response),
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: JSON.stringify(response) } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -397,32 +219,17 @@ server.tool(
 server.tool(
   "set-my-commands",
   "Use this method to change the list of the bot's commands",
-  {
-    commands: z.array(TelegramCommandSchema),
-  },
+  { commands: z.array(z.object({
+    command: z.string().min(1, "Command is required"),
+    description: z.string().min(1, "Description is required"),
+  })) },
   async ({ commands }) => {
     try {
       await bot.telegram.setMyCommands(commands);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Successfully updated bot commands",
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: "Successfully updated bot commands" } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -433,26 +240,10 @@ server.tool(
   async () => {
     try {
       const response = await bot.telegram.getMyCommands();
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response),
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: JSON.stringify(response) } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -460,32 +251,14 @@ server.tool(
 server.tool(
   "set-my-name",
   "Use this method to change the bot's name",
-  {
-    name: z.string().describe("New bot name; 0-64 characters"),
-  },
+  { name: z.string().describe("New bot name; 0-64 characters") },
   async ({ name }) => {
     try {
       await bot.telegram.setMyName(name);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Successfully updated bot name",
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: "Successfully updated bot name" } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -496,26 +269,10 @@ server.tool(
   async () => {
     try {
       const response = await bot.telegram.getMyName();
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response),
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: JSON.stringify(response) } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -523,32 +280,14 @@ server.tool(
 server.tool(
   "set-my-description",
   "Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty",
-  {
-    description: z.string().describe("New bot description; 0-512 characters"),
-  },
+  { description: z.string().describe("New bot description; 0-512 characters") },
   async ({ description }) => {
     try {
       await bot.telegram.setMyDescription(description);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Successfully updated bot description",
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: "Successfully updated bot description" } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
@@ -559,26 +298,10 @@ server.tool(
   async () => {
     try {
       const response = await bot.telegram.getMyDescription();
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response),
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: JSON.stringify(response) } ] };
     } catch (error) {
       console.error(error);
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Something went wrong`,
-          },
-        ],
-      };
+      return { content: [ { type: "text", text: `Something went wrong` } ] };
     }
   }
 );
