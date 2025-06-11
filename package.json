@@ -2,6 +2,7 @@
   "name": "telegram-bot-mcp",
   "version": "0.0.1",
   "main": "index.js",
+  "bin": "./index.js",
   "license": "MIT",
   "scripts": {
     "start": "node index.js"
