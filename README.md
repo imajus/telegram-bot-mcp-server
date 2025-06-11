@@ -21,6 +21,8 @@ Send a plain text message to a specific user or chat.
 - **Input**:
   - `chatId`: Target chat ID or username
   - `text`: Message content
+  - `replyToMessageId` (optional): ID of the message to reply to
+  - `parseMode` (optional, default `MarkdownV2`): Text markup mode (`Markdown`, `MarkdownV2`, or `HTML`)
 
 ---
 
