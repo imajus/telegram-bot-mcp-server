@@ -1,162 +1,89 @@
-# 🧠 Telegram Bot MCP Server
+# Telegram Bot MCP Server
 
 This project is a **Telegram bot integration** built using the [Model Context Protocol (MCP)](https://modelcontextprotocol.org/) that exposes a suite of useful tools for interacting with the Telegram Bot API. It enables standardized communication with Telegram via a structured set of commands such as messaging, user management, and bot profile configuration.
 
+> **Note:** This project is a fork of [siavashdelkhosh81/telegram-bot-mcp-server](https://github.com/siavashdelkhosh81/telegram-bot-mcp-server) with a few improvements:
+>
+> - Converted from TypeScript to pure JavaScript
+> - Updated some of the tools
+
 ---
 
-## 🚀 Features
+## Features
 
 This MCP server exposes the following tools:
 
-### ✅ `get-me`
+### Bot Information
 
-Test your bot's authentication and retrieve basic information about the bot.
+- **get-me** - Test your bot's authentication and retrieve basic information about the bot
 
----
+### Messaging
 
-### 💬 `send-message`
+- **send-message** - Send a plain text message to a specific user or chat
 
-Send a plain text message to a specific user or chat.
+  - `chatId`: Target chat ID or username (string, required)
+  - `text`: Message content (string, required)
+  - `replyToMessageId`: ID of the message to reply to (number, optional)
+  - `parseMode`: Text markup mode - `Markdown`, `MarkdownV2`, or `HTML` (string, optional, default: `MarkdownV2`)
 
-- **Input**:
-  - `chatId`: Target chat ID or username
-  - `text`: Message content
-  - `replyToMessageId` (optional): ID of the message to reply to
-  - `parseMode` (optional, default `MarkdownV2`): Text markup mode (`Markdown`, `MarkdownV2`, or `HTML`)
+- **send-photo** - Send a photo with an optional caption
+  - `chatId`: Target chat ID or username (string, required)
+  - `media`: File ID, URL, or uploaded file (string, required)
+  - `text`: Caption for the photo (string, optional)
 
----
+### Chat Management
 
-### 🖼️ `send-photo`
+- **kick-chat-member** - Ban a user from a group, supergroup, or channel
 
-Send a photo with an optional caption.
+  - `chatId`: Target chat (string, required)
+  - `userId`: User to ban (number, required)
 
-- **Input**:
-  - `chatId`: Target chat ID or username
-  - `media`: File ID, URL, or uploaded file
-  - `text` (optional): Caption for the photo
+- **un-ban-chat-member** - Unban a previously banned user from a chat
 
----
+  - `chatId`: Target chat (string, required)
+  - `userId`: User to unban (number, required)
 
-### 🔨 `kick-chat-member`
+- **get-chat** - Fetch full chat metadata and details
 
-Ban a user from a group, supergroup, or channel.
+  - `chatId`: Target chat (string, required)
 
-- **Input**:
-  - `chatId`: Target chat
-  - `userId`: User to ban
+- **get-chat-member-count** - Get the total number of members in a group or channel
 
----
+  - `chatId`: Target chat (string, required)
 
-### ♻️ `un-ban-chat-member`
+- **get-chat-member** - Get detailed info about a specific member in a group or channel
+  - `chatId`: Target chat (string, required)
+  - `userId`: Target user (number, required)
 
-Unban a previously banned user from a chat.
+### Bot Configuration
 
-- **Input**:
-  - `chatId`: Target chat
-  - `userId`: User to unban
+- **set-my-short-description** - Update your bot's short description (shown in the profile and shares)
 
----
+  - `short_description`: New short description, max 120 characters (string, required)
 
-### 🧾 `get-chat`
+- **get-my-short-description** - Fetch the current short description of the bot
 
-Fetch full chat metadata and details.
+- **set-my-commands** - Set the list of commands that appear in the Telegram UI
 
-- **Input**:
-  - `chatId`: Target chat
+  - `commands`: Array of command objects with `{ command, description }` structure (array, required)
 
----
+- **get-my-commands** - Get the current list of commands configured for the bot
 
-### 👥 `get-chat-member-count`
+- **set-my-name** - Update the name of the bot
 
-Get the total number of members in a group or channel.
+  - `name`: New bot name (string, required)
 
-- **Input**:
-  - `chatId`: Target chat
+- **get-my-name** - Retrieve the current name of the bot
 
----
+- **set-my-description** - Update the full description of the bot (shown in empty chats)
 
-### 🔍 `get-chat-member`
+  - `description`: New bot description, max 512 characters (string, required)
 
-Get detailed info about a specific member in a group or channel.
+- **get-my-description** - Fetch the current description of the bot
 
-- **Input**:
-  - `chatId`: Target chat
-  - `userId`: Target user
+## Installation
 
----
-
-### ✏️ `set-my-short-description`
-
-Update your bot's short description (shown in the profile and shares).
-
-- **Input**:
-  - `short_description`: New short description (max 120 chars)
-
----
-
-### 📄 `get-my-short-description`
-
-Fetch the current short description of the bot.
-
----
-
-### 📝 `set-my-commands`
-
-Set the list of commands that appear in the Telegram UI.
-
-- **Input**:
-  - `commands`: Array of `{ command, description }`
-
----
-
-### 📋 `get-my-commands`
-
-Get the current list of commands configured for the bot.
-
----
-
-### 🧑‍💻 `set-my-name`
-
-Update the name of the bot.
-
-- **Input**:
-  - `name`: New bot name
-
----
-
-### 🙋 `get-my-name`
-
-Retrieve the current name of the bot.
-
----
-
-### 📘 `set-my-description`
-
-Update the full description of the bot (shown in empty chats).
-
-- **Input**:
-  - `description`: New bot description (max 512 chars)
-
----
-
-### 📖 `get-my-description`
-
-Fetch the current description of the bot.
-
----
-
-## 📦 Installation
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/siavashdelkhosh81/telegram-bot-mcp-server.git
-cd telegram-bot-mcp-server
-```
-
----
-
-### 2. Get Your Telegram Bot Token
+### 1. Get Your Telegram Bot Token
 
 1. Open Telegram and search for [@BotFather](https://t.me/BotFather).
 2. Start a conversation and run the command:
@@ -166,34 +93,22 @@ cd telegram-bot-mcp-server
 3. Follow the prompts to name your bot and get your **API token**.
 4. Save the token.
 
----
+### 2. Integration
 
-### 3. Install and build
-
-Install packages
+You can use this MCP server directly without cloning by using npx:
 
 ```bash
-yarn
+npx -y telegram-bot-mcp
 ```
 
-Build packages
-
-```bash
-yarn build
-```
-
----
-
-### 4. Configure Your MCP Client
-
-Add this to your MCP client configuration:
+Then configure your MCP client with the following configuration:
 
 ```json
 {
   "mcpServers": {
     "telegram_bot": {
-      "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/PARENT/FOLDER/.build/index.js"],
+      "command": "npx",
+      "args": ["-y", "telegram-bot-mcp"],
       "env": {
         "TELEGRAM_BOT_API_TOKEN": "your bot token"
       }
@@ -202,15 +117,50 @@ Add this to your MCP client configuration:
 }
 ```
 
-> 🔁 Replace `/ABSOLUTE/PATH/TO/PARENT/FOLDER/.build/index.js` with the real path to your compiled project entry point.
+## Development
 
----
+If you want to contribute or run from source:
 
-## 💬 Support & Feedback
+```bash
+git clone https://github.com/imajus/telegram-bot-mcp-server.git
+cd telegram-bot-mcp-server
+```
+
+Install packages:
+
+```bash
+npm install
+```
+
+Run the server in stdio mode:
+
+```bash
+npm start
+```
+
+For local testing, add this to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "telegram_bot": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/PARENT/FOLDER/index.js"],
+      "env": {
+        "TELEGRAM_BOT_API_TOKEN": "your bot token"
+      }
+    }
+  }
+}
+```
+
+Replace `/ABSOLUTE/PATH/TO/PARENT/FOLDER/index.js` with the real path to your project entry point.
+
+## Support & Feedback
 
 Feel free to open issues or contribute to the project. For Telegram-specific help, refer to the [Telegram Bot API documentation](https://core.telegram.org/bots/api).
 
-Buy me a Coffee :) https://buymeacoffee.com/delkhoshsiv
+Buy the [original author](https://github.com/siavashdelkhosh81) a Coffee: https://buymeacoffee.com/delkhoshsiv
 
 ## License
 
