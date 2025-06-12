@@ -371,6 +371,117 @@ server.tool(
   }
 );
 
+server.tool(
+  'set-message-reaction',
+  'Use this method to change the list of emoji reactions on a message',
+  {
+    chatId: z
+      .string()
+      .describe(
+        'Unique identifier for the target chat or username of the target channel'
+      ),
+    messageId: z.number().describe('Identifier of the target message'),
+    reaction: z
+      .array(
+        z.enum([
+          '👍',
+          '👎',
+          '❤',
+          '🔥',
+          '🥰',
+          '👏',
+          '😁',
+          '🤔',
+          '🤯',
+          '😱',
+          '🤬',
+          '😢',
+          '🎉',
+          '🤩',
+          '🤮',
+          '💩',
+          '🙏',
+          '👌',
+          '🕊',
+          '🤡',
+          '🥱',
+          '🥴',
+          '😍',
+          '🐳',
+          '❤‍🔥',
+          '🌚',
+          '🌭',
+          '💯',
+          '🤣',
+          '⚡',
+          '🍌',
+          '🏆',
+          '💔',
+          '🤨',
+          '😐',
+          '🍓',
+          '🍾',
+          '💋',
+          '🖕',
+          '😈',
+          '😴',
+          '😭',
+          '🤓',
+          '👻',
+          '👨‍💻',
+          '👀',
+          '🎃',
+          '🙈',
+          '😇',
+          '😨',
+          '🤝',
+          '✍',
+          '🤗',
+          '🫡',
+          '🎅',
+          '🎄',
+          '☃',
+          '💅',
+          '🤪',
+          '🗿',
+          '🆒',
+          '💘',
+          '🙉',
+          '🦄',
+          '😘',
+          '💊',
+          '🙊',
+          '😎',
+          '👾',
+          '🤷‍♂',
+          '🤷',
+          '🤷‍♀',
+          '😡',
+        ])
+      )
+      .optional()
+      .describe(
+        'A list of reaction emojis. Pass an empty array to remove all reactions'
+      ),
+  },
+  async ({ chatId, messageId, reaction = [] }) => {
+    try {
+      /** @type {import('telegraf/types').ReactionTypeEmoji[]} */
+      const reactionObjects = reaction.map((emoji) => ({
+        type: 'emoji',
+        emoji,
+      }));
+      await bot.telegram.setMessageReaction(chatId, messageId, reactionObjects);
+      return {
+        content: [{ type: 'text', text: 'Successfully set message reaction' }],
+      };
+    } catch (error) {
+      console.error(error);
+      return { content: [{ type: 'text', text: `Something went wrong` }] };
+    }
+  }
+);
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);

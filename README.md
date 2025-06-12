@@ -27,9 +27,15 @@ This MCP server exposes the following tools:
   - `parseMode`: Text markup mode - `Markdown`, `MarkdownV2`, or `HTML` (string, optional, default: `MarkdownV2`)
 
 - **send-photo** - Send a photo with an optional caption
+
   - `chatId`: Target chat ID or username (string, required)
   - `media`: File ID, URL, or uploaded file (string, required)
   - `text`: Caption for the photo (string, optional)
+
+- **set-message-reaction** - Add emoji reactions to a message
+  - `chatId`: Target chat ID or username (string, required)
+  - `messageId`: ID of the message to react to (number, required)
+  - `reaction`: Array of emoji reactions to add (array of strings, optional) - Pass an empty array to remove all reactions
 
 ### Chat Management
 
